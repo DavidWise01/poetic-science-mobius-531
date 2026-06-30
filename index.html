@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050009">
+<meta name="description" content="Truth / Untruth Möbius 5·3·1 — poetic science prototype.">
+<title>Truth / Untruth — Möbius 5·3·1</title>
+<style>
+:root{
+  --bg:#050009;
+  --ink:#faf6ff;
+  --soft:#d7c9ee;
+  --muted:#a998c4;
+  --line:rgba(230,200,255,.22);
+  --truth:#67e8ff;
+  --untruth:#ff4fe3;
+  --gold:#ffd166;
+  --violet:#9b5cff;
+  --glass:rgba(255,255,255,.055);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 72% 14%,rgba(103,232,255,.15),transparent 28rem),
+    radial-gradient(circle at 20% 82%,rgba(255,79,227,.14),transparent 28rem),
+    radial-gradient(circle at 50% 50%,rgba(155,92,255,.08),transparent 36rem),
+    linear-gradient(135deg,#020105,#080012 52%,#000);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,transparent 0 96%,rgba(155,92,255,.05) 97% 100%),
+    linear-gradient(0deg,transparent 0 96%,rgba(155,92,255,.032) 97% 100%);
+  background-size:34px 34px;
+  mask-image:radial-gradient(circle,black,transparent 82%);
+  z-index:0;
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.08;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.48'/%3E%3C/svg%3E");
+  z-index:8;
+}
+header,main,footer{position:relative;z-index:1}
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:minmax(320px,.92fr) minmax(420px,1.08fr);
+  gap:clamp(2rem,5vw,5rem);
+  align-items:center;
+  padding:clamp(1.4rem,5vw,5rem);
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.7rem;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:.65rem .9rem;
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:.72rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  backdrop-filter:blur(14px);
+}
+.badge i{
+  width:.6rem;height:.6rem;border-radius:50%;
+  background:var(--truth);
+  box-shadow:0 0 18px var(--truth),0 0 38px var(--violet);
+}
+h1{
+  margin:1.4rem 0 1.1rem;
+  font-size:clamp(4rem,9vw,10rem);
+  line-height:.82;
+  letter-spacing:-.085em;
+  text-transform:uppercase;
+}
+.grad{
+  background:linear-gradient(105deg,#fff 0%,#eadbff 22%,var(--truth) 45%,var(--untruth) 73%,var(--gold) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  filter:drop-shadow(0 0 26px rgba(255,79,227,.18));
+}
+.lede{
+  max-width:65ch;
+  color:var(--soft);
+  font-size:clamp(1.05rem,1.55vw,1.28rem);
+  line-height:1.75;
+}
+.actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.8rem}
+.button{
+  color:var(--ink);
+  text-decoration:none;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:.9rem 1.1rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.025));
+  box-shadow:0 18px 60px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.stage{
+  position:relative;
+  min-height:min(76vh,760px);
+  display:grid;
+  place-items:center;
+}
+.field{
+  position:relative;
+  width:min(76vw,680px);
+  aspect-ratio:1;
+}
+.field:before{
+  content:"";
+  position:absolute;
+  inset:9%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.15),rgba(103,232,255,.08) 18%,rgba(255,79,227,.05) 42%,transparent 70%);
+  filter:blur(2px);
+  box-shadow:0 0 120px rgba(103,232,255,.13);
+}
+.mobius{
+  position:absolute;
+  left:8%;
+  top:39%;
+  width:84%;
+  height:22%;
+  border-radius:50%;
+  transform:scaleY(.42) rotate(var(--rot));
+  transform-style:preserve-3d;
+  animation:spin 16s linear infinite;
+}
+.mobius.truth{
+  --rot:0deg;
+  border:4px solid rgba(103,232,255,.68);
+  box-shadow:0 0 38px rgba(103,232,255,.28), inset 0 0 32px rgba(103,232,255,.14);
+}
+.mobius.untruth{
+  --rot:90deg;
+  border:4px solid rgba(255,79,227,.58);
+  box-shadow:0 0 38px rgba(255,79,227,.24), inset 0 0 32px rgba(255,79,227,.13);
+  animation-direction:reverse;
+}
+.mobius:before{
+  content:"";
+  position:absolute;
+  left:46%;
+  top:-11px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 26px var(--gold),0 0 56px rgba(255,209,102,.35);
+}
+.point{
+  position:absolute;
+  width:90px;height:90px;border-radius:50%;
+  display:grid;place-items:center;text-align:center;
+  border:1px solid var(--line);
+  background:rgba(5,0,9,.78);
+  backdrop-filter:blur(12px);
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.point small{display:block;color:var(--muted);font-size:.62rem;letter-spacing:.14em}
+.past{left:0;top:43%;box-shadow:0 0 44px rgba(103,232,255,.24)}
+.present{left:calc(50% - 45px);top:43%;box-shadow:0 0 56px rgba(255,209,102,.30)}
+.future{right:0;top:43%;box-shadow:0 0 44px rgba(255,79,227,.24)}
+.resolver{
+  position:absolute;
+  inset:35%;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.22);
+  background:radial-gradient(circle,rgba(255,255,255,.92),rgba(255,209,102,.22) 22%,rgba(5,0,9,.52) 65%);
+  box-shadow:0 0 70px rgba(255,255,255,.22),0 0 110px rgba(255,209,102,.16);
+  color:#050009;
+  font-size:clamp(1.8rem,5vw,4rem);
+  font-weight:1000;
+}
+.readout{
+  position:absolute;
+  left:50%;
+  bottom:2%;
+  transform:translateX(-50%);
+  min-width:min(92%,520px);
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(0,0,0,.36);
+  padding:.9rem;
+  backdrop-filter:blur(16px);
+}
+.row{display:flex;justify-content:space-between;gap:1rem;padding:.45rem 0;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.06)}
+.row:last-child{border-bottom:0}.row b{color:white}
+main{padding:clamp(4rem,8vw,8rem) clamp(1.4rem,5vw,5rem)}
+.section-head{max-width:980px;margin-bottom:2rem}
+h2{
+  margin:0 0 1rem;
+  font-size:clamp(2.4rem,5vw,5.6rem);
+  line-height:.92;
+  letter-spacing:-.06em;
+  text-transform:uppercase;
+}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem}
+.card{
+  grid-column:span 4;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:1.35rem;
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.024));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 26px 76px rgba(0,0,0,.27);
+  min-height:210px;
+}
+.card h3{margin:0 0 .8rem;letter-spacing:.07em;text-transform:uppercase;font-size:1rem}
+.card p{margin:0;color:var(--soft);line-height:1.7}
+.span-6{grid-column:span 6}.span-12{grid-column:span 12}
+.frame{
+  display:flex;
+  gap:.8rem;
+  flex-wrap:wrap;
+  margin-top:1.2rem;
+}
+.cell{
+  border:1px solid var(--line);
+  border-radius:22px;
+  min-width:78px;
+  padding:1.1rem 1.25rem;
+  text-align:center;
+  background:rgba(255,255,255,.045);
+  font-weight:1000;
+  font-size:1.5rem;
+}
+.chart-card{min-height:unset}
+canvas{
+  width:100%;
+  height:300px;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:#05000a;
+}
+blockquote{
+  margin:0;
+  padding:1.4rem;
+  border-left:3px solid var(--truth);
+  color:#e8dcff;
+  background:rgba(0,0,0,.26);
+  border-radius:22px;
+  line-height:1.8;
+  font-size:1.1rem;
+}
+footer{
+  padding:3rem clamp(1.4rem,5vw,5rem);
+  color:var(--muted);
+  border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.28);
+}
+@keyframes spin{to{transform:scaleY(.42) rotate(calc(var(--rot) + 360deg))}}
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr}
+  .stage{min-height:620px}
+  .card,.span-6{grid-column:span 12}
+}
+@media(max-width:640px){
+  .point{width:72px;height:72px;font-size:.8rem}
+  .present{left:calc(50% - 36px)}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div>
+    <div class="badge"><i></i> Poetic Science // 5·3·1</div>
+    <h1><span class="grad">Truth</span><br>Untruth</h1>
+    <p class="lede">Two Möbius strips, one bright and one shadowed, turn around three temporal points: past, present, future. Five context samples compress into three moments, and three moments resolve into one living answer.</p>
+    <div class="frame">
+      <div class="cell">5</div>
+      <div class="cell">3</div>
+      <div class="cell">1</div>
+    </div>
+    <div class="actions">
+      <a class="button" href="#read">Read the frame</a>
+      <a class="button" href="#metrics">See stability</a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="field">
+      <div class="mobius truth"></div>
+      <div class="mobius untruth"></div>
+      <div class="point past">PAST<small>memory</small></div>
+      <div class="point present">NOW<small>choice</small></div>
+      <div class="point future">FUTURE<small>echo</small></div>
+      <div class="resolver">0</div>
+      <div class="readout">
+        <div class="row"><span>normal stability</span><b>0.99494</b></div>
+        <div class="row"><span>noise stability</span><b>0.97428</b></div>
+        <div class="row"><span>pressure stability</span><b>0.82710</b></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="read">
+    <div class="section-head">
+      <h2>The frame</h2>
+      <p class="lede">The model is small enough to breathe. Truth and untruth do not destroy each other. They twist, invert, and keep time.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <h3>Five</h3>
+        <p>Five context samples circle the strips. They are not answers. They are weather, pressure, bias, memory, and possibility.</p>
+      </article>
+      <article class="card">
+        <h3>Three</h3>
+        <p>Past carries memory, present makes contact, future returns prediction. The system stays stable because no moment stands alone.</p>
+      </article>
+      <article class="card">
+        <h3>One</h3>
+        <p>The resolved output returns near zero: not empty, but balanced. The answer is the point where excess cancels and coherence remains.</p>
+      </article>
+      <article class="card span-6">
+        <h3>Truth strip</h3>
+        <p>The bright strip preserves continuity. It pulls signal toward clarity without pretending the shadow is gone.</p>
+      </article>
+      <article class="card span-6">
+        <h3>Untruth strip</h3>
+        <p>The shadow strip carries inversion, doubt, discarded paths, and contradiction. Its purpose is not corruption. Its purpose is correction.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="metrics">
+    <div class="section-head">
+      <h2>Stability</h2>
+      <p class="lede">The normal and noise runs are almost crystalline. The pressure run lands in the adaptive zone: coherent, but not frozen.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <h3>Normal</h3>
+        <p>Average stability: <b>0.99494</b><br>Minimum stability: <b>0.98989</b><br>Resolved output: <b>-0.00211</b></p>
+      </article>
+      <article class="card">
+        <h3>Noise</h3>
+        <p>Average stability: <b>0.97428</b><br>Minimum stability: <b>0.92999</b><br>Resolved output: <b>-0.01962</b></p>
+      </article>
+      <article class="card">
+        <h3>Pressure</h3>
+        <p>Average stability: <b>0.82710</b><br>Minimum stability: <b>0.69707</b><br>Resolved output: <b>-0.00264</b></p>
+      </article>
+      <article class="card span-12 chart-card">
+        <h3>Live poetic trace</h3>
+        <canvas id="trace" width="1200" height="320"></canvas>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Poetic science</h2>
+    </div>
+    <blockquote>
+      Truth moves forward. Untruth folds back. Past remembers. Present chooses. Future answers in echo. The center does not shout. It resolves.
+    </blockquote>
+  </section>
+</main>
+
+<footer>
+Truth / Untruth Möbius 5·3·1 — two strips, three temporal points, one resolved output.
+</footer>
+
+<script>
+const c=document.getElementById('trace');
+const ctx=c.getContext('2d');
+let t=0;
+function draw(){
+  const w=c.width,h=c.height,p=38;
+  ctx.clearRect(0,0,w,h);
+  const g=ctx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0,'#05000a');g.addColorStop(.5,'#1b002b');g.addColorStop(1,'#000');
+  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+
+  ctx.strokeStyle='rgba(230,200,255,.13)';
+  for(let i=0;i<=10;i++){
+    const y=p+i*(h-2*p)/10;
+    ctx.beginPath();ctx.moveTo(p,y);ctx.lineTo(w-p,y);ctx.stroke();
+  }
+  function plot(color, phase, amp, offset){
+    ctx.beginPath();
+    for(let i=0;i<w-2*p;i++){
+      const x=p+i;
+      const n=i/(w-2*p);
+      const truth=Math.sin(n*Math.PI*10+t*.025+phase);
+      const envelope=Math.sin(n*Math.PI);
+      const y=h/2 - truth*envelope*amp - offset;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.strokeStyle=color;ctx.lineWidth=3;ctx.shadowColor=color;ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;
+  }
+  plot('rgba(103,232,255,.95)',0,62,24);
+  plot('rgba(255,79,227,.82)',Math.PI,62,-24);
+
+  // resolved near-zero trace
+  ctx.beginPath();
+  for(let i=0;i<w-2*p;i++){
+    const x=p+i,n=i/(w-2*p);
+    const y=h/2 + Math.sin(n*Math.PI*20+t*.04)*4;
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+  }
+  ctx.strokeStyle='rgba(255,209,102,.95)';ctx.lineWidth=2;ctx.stroke();
+
+  ctx.fillStyle='#d7c9ee';ctx.font='14px ui-monospace';
+  ctx.fillText('truth',p,22);
+  ctx.fillStyle='#67e8ff';ctx.fillText('truth strip',p+70,22);
+  ctx.fillStyle='#ff4fe3';ctx.fillText('untruth strip',p+180,22);
+  ctx.fillStyle='#ffd166';ctx.fillText('resolved near zero',p+320,22);
+
+  t++;
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

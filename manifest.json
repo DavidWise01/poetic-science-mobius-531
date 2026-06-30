@@ -1,0 +1,23 @@
+{
+  "name": "Truth / Untruth M\u00f6bius 5\u00b73\u00b71",
+  "type": "single-page poetic science artifact",
+  "entry": "index.html",
+  "structure": {
+    "mobius_strips": 2,
+    "roles": [
+      "truth",
+      "untruth"
+    ],
+    "points": [
+      "past",
+      "present",
+      "future"
+    ],
+    "compression": "5/3/1"
+  },
+  "stability": {
+    "normal_avg": 0.99494,
+    "noise_avg": 0.97428,
+    "pressure_avg": 0.8271
+  }
+}
