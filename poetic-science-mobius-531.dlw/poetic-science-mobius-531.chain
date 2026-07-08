@@ -1,0 +1,9 @@
+ROOT0-DLW-CHAIN-v1
+index : 253
+slug  : poetic-science-mobius-531
+seal  : db5e346bebd7180266398f327035c6a207847218b4163b0db7e329a714253e13
+prev  : 693a9a23de11c34c1eda58d58230648468f7a3d9147c7acfd01b9005d88df199
+link  : 27ab79eba45fca8433c820eb74cf5aefd05e4c06872241a34fa73a0f3c0e3830
+head  : 3447d3a0533aaf1e29a8bdc67a9774884fb3ae9dbc8a17064b7a008ca3c4ec90
+
+— the tether: link = sha256(index|slug|seal|prev). the chain head commits to the whole corpus.
